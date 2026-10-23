@@ -289,7 +289,7 @@ export function Game() {
             {screen === "bet" && race && (
               <div className="grid gap-3 md:grid-cols-[1.4fr_1fr]">
                 <div className="ps1-window p-2 sm:p-3">
-                  <div className="mb-1 grid grid-cols-[1.5rem_2rem_1fr_3.5rem_3.5rem_4rem] gap-1 px-1 text-base text-muted-foreground sm:grid-cols-[1.5rem_2rem_1fr_3.5rem_4rem_4.5rem]">
+                  <div className="mb-1 grid grid-cols-[1.5rem_2rem_1fr_3.5rem_3.5rem_4rem] gap-1 px-1 text-base text-muted-foreground sm:grid-cols-[1.5rem_2rem_1fr_4.5rem_4.5rem_4.5rem]">
                     <span />
                     <span>#</span>
                     <span>HORSE</span>
@@ -303,14 +303,14 @@ export function Game() {
                       key={h.id}
                       onClick={() => setSel(i)}
                       onDoubleClick={() => placeBet()}
-                      className={`ps1-row grid w-full grid-cols-[1.5rem_2rem_1fr_3.5rem_3.5rem_4rem] items-center gap-1 px-1 text-left text-xl sm:grid-cols-[1.5rem_2rem_1fr_3.5rem_4rem_4.5rem] sm:text-2xl ${i === sel ? "ps1-row-active" : ""}`}
+                      className={`ps1-row grid w-full grid-cols-[1.5rem_2rem_1fr_3.5rem_3.5rem_4rem] items-center gap-1 px-1 text-left text-xl sm:grid-cols-[1.5rem_2rem_1fr_4.5rem_4.5rem_4.5rem] sm:text-2xl ${i === sel ? "ps1-row-active" : ""}`}
                     >
                       <span className="text-accent">{i === sel ? "▶" : ""}</span>
                       <span className="saddle" style={{ backgroundColor: h.body }}>
                         {h.id}
                       </span>
                       <span className="truncate">{h.name}</span>
-                      <span className="hidden text-muted-foreground sm:block">{h.form}</span>
+                      <span className="hidden whitespace-nowrap text-muted-foreground sm:block">{h.form}</span>
                       <span className="sm:hidden" />
                       <span className={`text-right ${betType === "WIN" ? "text-accent" : ""}`}>×{h.winMult}</span>
                       <span className={`text-right ${betType === "PLACE" ? "text-accent" : ""}`}>×{h.placeMult.toFixed(1)}</span>

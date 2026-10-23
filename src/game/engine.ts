@@ -210,8 +210,8 @@ export function horsePosition(race: Race, horseId: number, t: number): number {
   let f = Math.pow(u, horse.style) + wb.a * Math.sin(Math.PI * u) * Math.sin(wb.w * Math.PI * u + wb.phase);
   f = Math.max(0, Math.min(1, f));
   if (t > T) {
-    // Coast past the line.
-    return TRACK_LENGTH + (t - T) * (TRACK_LENGTH / T) * 0.6;
+    // Pull up gently past the line.
+    return TRACK_LENGTH + 40 * (1 - Math.exp(-(t - T) * 1.5));
   }
   return f * TRACK_LENGTH;
 }

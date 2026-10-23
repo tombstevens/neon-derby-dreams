@@ -114,7 +114,7 @@ export function RaceCanvas({ race, phase, startedAt, highlightId, onFinished }: 
       const leader = Math.max(...positions.map((p) => p.x));
       const last = Math.min(...positions.map((p) => p.x));
       let cam = Math.max((leader + last) / 2 - 150, leader - 250);
-      cam = Math.max(0, Math.min(cam, TRACK_LENGTH - 230));
+      cam = Math.max(0, Math.min(cam, TRACK_LENGTH - 160));
       cam = lerp(lastCam, cam, 0.15);
       lastCam = cam;
       const jitter = () => (Math.random() < 0.08 ? (Math.random() < 0.5 ? -1 : 1) : 0);
