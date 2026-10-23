@@ -180,8 +180,8 @@ export function generateRace(raceNumber: number, rng: Rng): Race {
   )[0];
   const tipHorse = rng() < 0.5 ? underrated : horses[Math.floor(rng() * horses.length)];
   const tipLine = TIP_SOURCES[Math.floor(rng() * TIP_SOURCES.length)]
-    .replaceAll("%n", String(tipHorse.id))
-    .replaceAll("%name", tipHorse.name);
+    .replaceAll("%name", tipHorse.name)
+    .replaceAll("%n", String(tipHorse.id));
 
   const order = sampleOrder(horses.map((h) => ({ id: h.id, s: h.trueStrength })), rng);
 
