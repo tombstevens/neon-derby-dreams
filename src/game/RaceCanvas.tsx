@@ -28,10 +28,10 @@ function crush(ctx: CanvasRenderingContext2D) {
   for (let y = 0; y < VIEW_H; y++) {
     for (let x = 0; x < VIEW_W; x++) {
       const i = (y * VIEW_W + x) * 4;
-      const th = (BAYER[(y & 3) * 4 + (x & 3)] / 16 - 0.5) * step;
-      d[i] = Math.round((d[i] + th) / step) * step;
-      d[i + 1] = Math.round((d[i + 1] + th) / step) * step;
-      d[i + 2] = Math.round((d[i + 2] + th) / step) * step;
+      const th = (BAYER[(y & 3) * 4 + (x & 3)]! / 16 - 0.5) * step;
+      d[i] = Math.round((d[i]! + th) / step) * step;
+      d[i + 1] = Math.round((d[i + 1]! + th) / step) * step;
+      d[i + 2] = Math.round((d[i + 2]! + th) / step) * step;
     }
   }
   ctx.putImageData(img, 0, 0);
@@ -46,8 +46,8 @@ function buildSky(): HTMLCanvasElement {
   c.width = VIEW_W;
   c.height = TRACK_TOP;
   const g = c.getContext("2d")!;
-  const top = [8, 10, 22];
-  const bottom = [70, 78, 74];
+  const top = [8, 10, 22] as const;
+  const bottom = [70, 78, 74] as const;
   for (let y = 0; y < TRACK_TOP; y++) {
     const t = Math.pow(y / TRACK_TOP, 1.6);
     g.fillStyle = `rgb(${lerp(top[0], bottom[0], t)},${lerp(top[1], bottom[1], t)},${lerp(top[2], bottom[2], t)})`;
@@ -229,12 +229,13 @@ export function RaceCanvas({ race, phase, startedAt, highlightId, onFinished }: 
         }
       });
       behind.forEach((i) => {
+        const bh = race.horses[i]!;
         const y = TRACK_TOP + 4 + i * LANE_GAP;
-        ctx.fillStyle = race.horses[i].body;
+        ctx.fillStyle = bh.body;
         ctx.fillRect(1, y, 8, 7);
         ctx.fillStyle = "#000000";
         ctx.font = "bold 6px monospace";
-        ctx.fillText(String(race.horses[i].id), 3, y + 6);
+        ctx.fillText(String(bh.id), 3, y + 6);
       });
 
       // --- Front rail (faster parallax)

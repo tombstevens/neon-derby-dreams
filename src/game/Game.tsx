@@ -41,7 +41,7 @@ const LOSE_LINES = [
   "The fog gets a little closer.",
   "Your memory card is full. Overwrite?",
 ];
-const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
+const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)]!;
 
 function Typewriter({ text, onDone }: { text: string; onDone?: () => void }) {
   const [n, setN] = useState(0);
@@ -128,7 +128,7 @@ export function Game() {
   const placeBet = (pass = false) => {
     if (!race) return;
     if (!pass) {
-      const h = race.horses[sel];
+      const h = race.horses[sel]!;
       setBet({ horseId: h.id, type: betType, stake });
       setChips((c) => c - stake);
     } else {
@@ -191,13 +191,14 @@ export function Game() {
     const pos = race.horses
       .map((h) => ({ h, x: horsePosition(race, h.id, t) }))
       .sort((a, b) => b.x - a.x);
-    const lead = pos[0];
+    const lead = pos[0]!;
+    const second = pos[1]!;
     const prog = lead.x / TRACK_LENGTH;
     let line: string;
     if (t < 1.2) line = "AND THEY'RE OFF!";
     else if (prog >= 1) line = `#${race.order[0]} ${race.horses.find((h) => h.id === race.order[0])!.name} WINS IT!`;
-    else if (prog > 0.8) line = `Final furlong! #${lead.h.id} ${lead.h.name} by a nose from #${pos[1].h.id}!`;
-    else line = `#${lead.h.id} ${lead.h.name} leads, #${pos[1].h.id} ${pos[1].h.name} in second...`;
+    else if (prog > 0.8) line = `Final furlong! #${lead.h.id} ${lead.h.name} by a nose from #${second.h.id}!`;
+    else line = `#${lead.h.id} ${lead.h.name} leads, #${second.h.id} ${second.h.name} in second...`;
     const mine = bet ? pos.findIndex((p) => p.h.id === bet.horseId) + 1 : null;
     return { countdown: 0, line, mine };
   }, [race, startedAt, now, screen, bet]);
@@ -242,7 +243,7 @@ export function Game() {
                 race={race}
                 phase={phase}
                 startedAt={startedAt}
-                highlightId={screen === "bet" ? selHorse?.id : bet?.horseId}
+                highlightId={(screen === "bet" ? selHorse?.id : bet?.horseId) ?? null}
                 onFinished={onFinished}
               />
             )}
@@ -281,7 +282,7 @@ export function Game() {
                   introIdx < INTRO.length - 1 ? setIntroIdx((i) => i + 1) : setScreen("bet")
                 }
               >
-                <Typewriter text={INTRO[introIdx]} />
+                <Typewriter text={INTRO[introIdx] ?? ""} />
                 <span className="blink mt-3 block text-right text-accent">▼</span>
               </button>
             )}
