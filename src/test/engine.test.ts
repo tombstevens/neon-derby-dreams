@@ -27,7 +27,7 @@ describe("game rules", () => {
 
   it("WIN bet only pays on first place; PLACE pays on first or second", () => {
     const race = generateRace(1, mulberry32(42));
-    const [first, second, third] = race.order;
+    const [first, second, third] = race.order as [number, number, number];
     const h1 = race.horses.find((h) => h.id === first)!;
     expect(settleBet({ horseId: first, type: "WIN", stake: 2 }, race)).toBe(payout(2, h1.winMult));
     expect(settleBet({ horseId: second, type: "WIN", stake: 2 }, race)).toBe(0);

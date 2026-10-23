@@ -69,7 +69,7 @@ export function drawHorse(
   colors: HorseColors,
   scale = 1,
 ) {
-  const rows = HORSE_FRAMES[frame % HORSE_FRAMES.length];
+  const rows = HORSE_FRAMES[frame % HORSE_FRAMES.length]!;
   const map: Record<string, string> = {
     B: colors.body,
     M: colors.mane,
@@ -79,11 +79,11 @@ export function drawHorse(
     K: "#000000",
   };
   for (let r = 0; r < rows.length; r++) {
-    const row = rows[r];
+    const row = rows[r]!;
     for (let c = 0; c < row.length; c++) {
-      const ch = row[c];
+      const ch = row[c]!;
       if (ch === ".") continue;
-      ctx.fillStyle = map[ch];
+      ctx.fillStyle = map[ch] ?? "#000000";
       ctx.fillRect(Math.round(x + c * scale), Math.round(y + r * scale), scale, scale);
     }
   }

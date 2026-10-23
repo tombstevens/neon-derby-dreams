@@ -88,7 +88,7 @@ function shuffle<T>(arr: T[], rng: Rng): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [a[i], a[j]] = [a[j]!, a[i]!];
   }
   return a;
 }
@@ -102,10 +102,10 @@ export function sampleOrder(strengths: { id: number; s: number }[], rng: Rng): n
     let r = rng() * total;
     let idx = 0;
     for (; idx < pool.length - 1; idx++) {
-      r -= pool[idx].w;
+      r -= pool[idx]!.w;
       if (r <= 0) break;
     }
-    order.push(pool[idx].id);
+    order.push(pool[idx]!.id);
     pool.splice(idx, 1);
   }
   return order;
@@ -137,14 +137,14 @@ export function generateRace(raceNumber: number, rng: Rng): Race {
 
   const horses: Horse[] = names.map((name, i) => {
     const publicStrength = gauss(rng) * 0.85;
-    const body = bodies[i];
-    let silk = silks[i];
-    if (silk === body) silk = silks[(i + 7) % silks.length];
+    const body = bodies[i]!;
+    let silk = silks[i]!;
+    if (silk === body) silk = silks[(i + 7) % silks.length]!;
     return {
       id: i + 1,
       name,
       body,
-      mane: WEBSAFE_DARK[Math.floor(rng() * WEBSAFE_DARK.length)],
+      mane: WEBSAFE_DARK[Math.floor(rng() * WEBSAFE_DARK.length)]!,
       silk,
       form: Array.from({ length: 3 }, () => 1 + Math.floor(rng() * FIELD_SIZE)).join("-"),
       publicStrength,
@@ -164,11 +164,13 @@ export function generateRace(raceNumber: number, rng: Rng): Race {
   const N = 1500;
   for (let k = 0; k < N; k++) {
     const o = sampleOrder(horses.map((h) => ({ id: h.id, s: h.publicStrength })), sim);
-    placeCounts[o[0]] = (placeCounts[o[0]] ?? 0) + 1;
-    placeCounts[o[1]] = (placeCounts[o[1]] ?? 0) + 1;
+    const a = o[0]!;
+    const b = o[1]!;
+    placeCounts[a] = (placeCounts[a] ?? 0) + 1;
+    placeCounts[b] = (placeCounts[b] ?? 0) + 1;
   }
   horses.forEach((h, i) => {
-    const pWin = pubWeights[i] / total;
+    const pWin = pubWeights[i]! / total;
     const pPlace = Math.max((placeCounts[h.id] ?? 1) / N, 0.02);
     h.winMult = Math.min(60, Math.max(1.5, roundTo(0.9 / pWin, 0.5)));
     h.placeMult = Math.min(20, Math.max(1.1, roundTo(0.9 / pPlace, 0.1)));
@@ -177,9 +179,9 @@ export function generateRace(raceNumber: number, rng: Rng): Race {
   // Tips: half the time the tip points at the horse the crowd underrates most.
   const underrated = [...horses].sort(
     (a, b) => b.trueStrength - b.publicStrength - (a.trueStrength - a.publicStrength),
-  )[0];
-  const tipHorse = rng() < 0.5 ? underrated : horses[Math.floor(rng() * horses.length)];
-  const tipLine = TIP_SOURCES[Math.floor(rng() * TIP_SOURCES.length)]
+  )[0]!;
+  const tipHorse = rng() < 0.5 ? underrated : horses[Math.floor(rng() * horses.length)]!;
+  const tipLine = TIP_SOURCES[Math.floor(rng() * TIP_SOURCES.length)]!
     .replaceAll("%name", tipHorse.name)
     .replaceAll("%n", String(tipHorse.id));
 
@@ -202,11 +204,11 @@ export function generateRace(raceNumber: number, rng: Rng): Race {
 
 /** World x-position of a horse at time t (seconds since the gate opened). */
 export function horsePosition(race: Race, horseId: number, t: number): number {
-  const T = race.finishTimes[horseId];
+  const T = race.finishTimes[horseId]!;
   const horse = race.horses.find((h) => h.id === horseId)!;
   if (t <= 0) return 0;
   const u = Math.min(t / T, 1);
-  const wb = race.wobble[horseId];
+  const wb = race.wobble[horseId]!;
   let f = Math.pow(u, horse.style) + wb.a * Math.sin(Math.PI * u) * Math.sin(wb.w * Math.PI * u + wb.phase);
   f = Math.max(0, Math.min(1, f));
   if (t > T) {
