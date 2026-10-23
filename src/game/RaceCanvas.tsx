@@ -108,7 +108,8 @@ export function RaceCanvas({ race, phase, startedAt, highlightId, onFinished }: 
     const lastHorseFinish = Math.max(...Object.values(race.finishTimes));
 
     const render = (now: number) => {
-      const t = phase === "idle" || startedAt == null ? 0 : (now - startedAt) / 1000;
+      let t = phase === "idle" || startedAt == null ? 0 : (now - startedAt) / 1000;
+      if (phase === "done") t = Math.min(t, lastHorseFinish + 0.8);
       const positions = race.horses.map((h) => ({ h, x: horsePosition(race, h.id, t) }));
       const leader = Math.max(...positions.map((p) => p.x));
       const last = Math.min(...positions.map((p) => p.x));
